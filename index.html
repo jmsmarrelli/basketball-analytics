@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shots, stints and schedules</title>
+<meta name="description" content="Basketball analytics from public data, by Joseph Smarrelli. Two bodies of work live here. The first is a set of studies of San Antonio&#x27;s 2025-26 season, built the way a coaching st">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  --surface:#fcfcfb; --raised:#f4f3ef; --ink:#0b0b0b; --ink-2:#43423f; --ink-3:#7d7b74;
+  --rule:#e3e2dc; --accent:#1c5cab; --mark:#eb6834;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --surface:#14140f; --raised:#1e1e18; --ink:#f2f1ec; --ink-2:#c9c7bf; --ink-3:#8d8b83;
+    --rule:#2e2e27; --accent:#7fb0f0; --mark:#f2895a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--surface); color:var(--ink);
+  font:400 17px/1.62 "Source Sans 3","Source Sans Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-feature-settings:"kern" 1;
+}
+.wrap{max-width:1020px;margin:0 auto;padding:0 22px}
+.bar{border-bottom:1px solid var(--rule);background:var(--surface)}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:baseline;padding-top:16px;padding-bottom:15px}
+.bar .slug{
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12.5px;letter-spacing:.02em;color:var(--ink-2)
+}
+.bar nav{margin-left:auto;display:flex;gap:18px}
+.bar a{
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12.5px;color:var(--ink-3);text-decoration:none;border-bottom:1px solid transparent
+}
+.bar a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+main{padding:0 0 96px}
+.col{max-width:700px}
+h1{
+  font-family:Archivo,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight:700;font-size:clamp(30px,5.4vw,46px);line-height:1.08;
+  letter-spacing:-.022em;margin:54px 0 20px;max-width:640px
+}
+h2{
+  font-family:Archivo,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight:600;font-size:22px;line-height:1.24;letter-spacing:-.012em;
+  margin:52px 0 14px;max-width:700px
+}
+h3{font-family:Archivo,"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:600;
+  font-size:18.5px;letter-spacing:-.008em;margin:40px 0 8px}
+p.meta{font-size:14.5px;color:var(--ink-3);margin:-2px 0 16px}
+p.meta a{border-bottom-color:transparent}
+p.meta a:hover{border-bottom-color:currentColor}
+p{margin:0 0 18px;max-width:700px}
+p strong{font-weight:600}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(28,92,171,.32)}
+a:hover{border-bottom-color:currentColor}
+hr{border:0;border-top:1px solid var(--rule);margin:46px 0}
+ul,ol{margin:0 0 18px;padding-left:22px;max-width:700px}
+li{margin:0 0 8px}
+li>p{margin:0 0 8px}
+code{
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.86em;background:var(--raised);padding:.12em .34em;border-radius:3px
+}
+pre{
+  background:var(--raised);border:1px solid var(--rule);border-radius:5px;
+  padding:15px 17px;overflow-x:auto;margin:0 0 22px;max-width:820px
+}
+pre code{background:none;padding:0;font-size:13px;line-height:1.55}
+em{color:var(--ink-2)}
+.tw{overflow-x:auto;margin:0 0 26px;max-width:980px}
+table{border-collapse:collapse;font-size:14.5px;min-width:100%}
+th,td{padding:7px 15px 7px 0;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{
+  font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  font-size:11.5px;text-transform:uppercase;letter-spacing:.055em;
+  color:var(--ink-3);font-weight:500;border-bottom-color:var(--ink-3);white-space:normal
+}
+td.num{text-align:right;font-variant-numeric:tabular-nums;padding-right:22px}
+th.num{text-align:right;padding-right:22px}
+tbody tr:last-child td{border-bottom:0}
+figure{margin:30px 0 34px;max-width:980px}
+figure img{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:4px}
+.foot{border-top:1px solid var(--rule);padding:22px 0 40px}
+.foot .wrap{
+  font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  font-size:11.5px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:8px 20px
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  h1{margin-top:36px}
+  th,td{padding-right:14px}
+}
+</style>
+</head>
+<body>
+<header class="bar"><div class="wrap"><span class="slug">basketball-analytics</span><nav><a href="https://github.com/jmsmarrelli/basketball-analytics">repository</a></nav></div></header>
+<main><div class="wrap">
+<h1>Shots, stints and schedules</h1>
+<p>Basketball analytics from public data, by Joseph Smarrelli. Two bodies of work
+live here. The first is a set of studies of San Antonio's 2025-26 season, built
+the way a coaching staff would use them: a question, a clean comparison, an
+honest interval and what to take into the film room. The second is
+twelve longer studies across twenty-two seasons of shot charts and play-by-play,
+each aimed at an argument people are still having.</p>
+<p>Everything runs from raw public files, every number quoted is committed as a
+table next to the write-up, and every study says what its data cannot see.</p>
+<hr>
+<h2>The 2025-26 season</h2>
+<h3>The 12 seconds after a Spurs turnover</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/spurs-game-management/reports/01_turnover_cost.html">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/spurs-game-management"><code>spurs-game-management</code> on GitHub</a></p>
+<p>A turnover count treats a stolen pass and a shot-clock violation the same. They
+are not. Opponents scored 0.69 more points in the next 12 seconds after
+San Antonio turnovers linked to a steal, adjusted within games, interval +0.58 to
++0.79. The same repository has a matched study of timeouts, which finds that
+both groups recover from a scoring dip and a timeout does not measurably speed
+it up, and a study of the last 40 seconds of a quarter.</p>
+<figure><img loading="lazy" alt="Adjusted scoring after steal-linked turnovers" src="figures/spurs-game-management.png"></figure>
+<h3>Where Wembanyama changes the shot map</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/spurs-research/reports/01_wembanyama_rim_footprint.html">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/spurs-research"><code>spurs-research</code> on GitHub</a></p>
+<p>Rotations rebuilt from substitution logs, compared within the same games:
+opponents' share of shots at the rim is 4.6 points lower during his minutes,
+interval −7.0 to −2.3. Whether they also finish worse at the rim is much less
+certain. The same repository takes on the Fox–Castle–Harper groups and his
+playoff shot diet.</p>
+<figure><img loading="lazy" alt="Adjusted rim-attempt share with Wembanyama on and off" src="figures/spurs-research.png"></figure>
+<h3>The part of SGA's offense a shot chart misses</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/west-playoff-scouting/reports/01_sga_foul_channel.html">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/west-playoff-scouting"><code>west-playoff-scouting</code> on GitHub</a></p>
+<p>Free throws supplied 24.6% of Shai Gilgeous-Alexander's retained points, and
+16.2% of his scoring chances ended in a foul trip with no shot attempt at all. A
+field-goal scouting report leaves out a quarter of the player. Alongside it: the
+shots Oklahoma City allows against a model reference, and a rebounding study of
+the Western contenders.</p>
+<figure><img loading="lazy" alt="Where SGA's points come from" src="figures/west-playoff-scouting.png"></figure>
+<h3>The first quarter and the rest of the Finals</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/nba-analytics-portfolio/reports/08_finals_postmortem_R.html">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/nba-analytics-portfolio"><code>nba-analytics-portfolio</code> on GitHub</a></p>
+<p>San Antonio won the first quarter of the 2026 Finals by 57 points over five
+games and lost the series by 12. Part of a set of eight studies that includes a
+lineup reconstruction audit, a rotation optimizer that loses to the allocation it
+replaces, and a season baseline for 2026-27, three of them written in R.</p>
+<figure><img loading="lazy" alt="Quarter-by-quarter margin across the Finals" src="figures/nba-finals-2026.png"></figure>
+<p><strong>Also from 2025-26:</strong> <a href="https://jmsmarrelli.github.io/nba-opponent-scouting/">opponent scouting sheets</a>
+for Oklahoma City, Denver and Houston, and <a href="https://jmsmarrelli.github.io/basketball-research/">three league-wide studies</a>
+on second shots, three-point defense and when to update a shooter.</p>
+<hr>
+<h2>Twenty-two seasons: league-wide</h2>
+<p>Twelve studies, 2003-04 to 2024-25. <strong>4.4 million shot attempts · 2.15 million
+possessions rebuilt from substitution logs · 26,453 games.</strong> Four of the twelve
+end in a null, and say so.</p>
+<h3>Shot quality and shot making</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/nba-shot-value/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/nba-shot-value"><code>nba-shot-value</code> on GitHub</a></p>
+<p>The three-point revolution gets credit for the league's efficiency boom. It is
+worth a little over a third of it: three-point accuracy went from .354 to .363 in
+twenty-two seasons, essentially nowhere, while the two-pointer went from .460 to
+.545. An expected-points model scored out of fold splits any set of attempts into
+the shots you generated and the shots you made — two skills that turn out to be
+almost unrelated and to stabilize at wildly different speeds.</p>
+<figure><img loading="lazy" alt="Points per attempt by zone, twenty years apart" src="figures/nba-shot-value.png"></figure>
+<h3>RAPM, built from the log up</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/nba-rapm/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/nba-rapm"><code>nba-rapm</code> on GitHub</a></p>
+<p>Play-by-play records substitutions and never records a lineup. Rebuilding the ten
+players on the floor for 11,145 games — and proving it, with 99.5% of
+player-games landing within a minute of the box score — is most of the work. Run
+without regularization, adjusted plus-minus is worse on held-out games than a
+model that knows only the two team names.</p>
+<figure><img loading="lazy" alt="RAPM leaderboard, three seasons pooled" src="figures/nba-rapm.png"></figure>
+<h3>The schedule tax</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/nba-schedule-tax/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/nba-schedule-tax"><code>nba-schedule-tax</code> on GitHub</a></p>
+<p>Twenty seasons of rest, travel and time zones priced inside a fixed-effects
+model. A season's worth of schedule luck is about a quarter of a win. Playing at
+altitude is worth ten times that, every year, to the same two teams. Miles flown
+never reach significance; time zones crossed do.</p>
+<figure><img loading="lazy" alt="Schedule luck against the altitude effect" src="figures/nba-schedule-tax.png"></figure>
+<hr>
+<h2>Twenty-two seasons: San Antonio</h2>
+<h3>What Wembanyama actually changes</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/spurs-rim-deterrence/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/spurs-rim-deterrence"><code>spurs-rim-deterrence</code> on GitHub</a></p>
+<p>The most repeated claim about him is that opponents stop going to the rim when he
+plays. At game level, the only split this data allows for his first two seasons,
+opponent rim share barely moves — a design too blunt to settle it either way.
+What does move, and survives a correction for testing twelve measures at once, is
+where opponents shoot outside the paint: more mid-range, fewer corner threes.</p>
+<figure><img loading="lazy" alt="Twelve deterrence measures with intervals" src="figures/spurs-rim-deterrence.png"></figure>
+<h3>Did the Spurs invent modern shot selection?</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/spurs-shot-selection/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/spurs-shot-selection"><code>spurs-shot-selection</code> on GitHub</a></p>
+<p>Across twenty-two seasons their shot chart sits 0.13 years <em>behind</em> the league's
+own trajectory, 16th of 34 teams. Houston is +5.75. The average conceals two
+eras that could not be less alike.</p>
+<figure><img loading="lazy" alt="Franchises against the league's shot-selection path" src="figures/spurs-shot-selection.png"></figure>
+<h3>The Rodeo Road Trip</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/spurs-rodeo-trip/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/spurs-rodeo-trip"><code>spurs-rodeo-trip</code> on GitHub</a></p>
+<p>They win more on it. They do not play better on it. Both of those are true, and
+the gap between them is the schedule — the trip is disproportionately made of
+games against teams having a bad season.</p>
+<figure><img loading="lazy" alt="The trip effect against expectation" src="figures/spurs-rodeo-trip.png"></figure>
+<h3>The Beautiful Game, measured</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/spurs-passing/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/spurs-passing"><code>spurs-passing</code> on GitHub</a></p>
+<p>The volume claim is ordinary. The distribution claim is extraordinary — but only
+once you account for the fact that bad teams look generous for free.</p>
+<figure><img loading="lazy" alt="Assist distribution among the teams that were actually good" src="figures/spurs-passing.png"></figure>
+<h3>What resting the Big Three actually bought</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/spurs-rest-policy/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/spurs-rest-policy"><code>spurs-rest-policy</code> on GitHub</a></p>
+<p>The reputation is real, and it starts later than the story says — after the 2005
+and 2007 titles, not before them.
+What it cost is measurable. What it bought is not.</p>
+<figure><img loading="lazy" alt="The regular-season ledger" src="figures/spurs-rest-policy.png"></figure>
+<h3>Tim Duncan's defense, and whether there was a Spurs defense</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/spurs-duncan-rapm/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/spurs-duncan-rapm"><code>spurs-duncan-rapm</code> on GitHub</a></p>
+<p>Among players who were on the floor for a career's worth of the era, only Kevin
+Garnett rates higher on defense than Tim Duncan. There is no measurable Spurs
+defense on top of the Spurs defenders — and the two franchises where there is one
+are Chicago and Indiana.</p>
+<figure><img loading="lazy" alt="Defensive RAPM leaderboard, 2003-04 to 2015-16" src="figures/spurs-duncan-rapm.png"></figure>
+<hr>
+<h2>Twenty-two seasons: the Western field</h2>
+<h3>The best defense a shot chart has ever seen</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/okc-defence/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/okc-defence"><code>okc-defence</code> on GitHub</a></p>
+<p>Oklahoma City's 2024-25 defense took more points off the board per game than any
+of the 659 team-seasons since 2003-04. It is not the best shot defense in the
+sample, and about half of its conversion edge sits on opponent three-point
+percentage, which repeats year to year at 0.19.</p>
+<figure><img loading="lazy" alt="Points denied per game, 659 team-seasons" src="figures/okc-defence.png"></figure>
+<h3>A matchup atlas for the Western top tier</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/west-shot-matchups/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/west-shot-matchups"><code>west-shot-matchups</code> on GitHub</a></p>
+<p>A shot chart is half chosen and half imposed, the two halves add, and there is no
+matchup effect on top of them: across 17,775 pairings the interaction term moves
+R² by six ten-thousandths. Removing the leak in the obvious version of that
+regression is worth four points of R², which is more than anything else tested.</p>
+<figure><img loading="lazy" alt="What each Western defense does to San Antonio's shot chart" src="figures/west-shot-matchups.png"></figure>
+<h3>The half of a contender you can scout in a week</h3>
+<p class="meta"><a href="https://jmsmarrelli.github.io/contender-shot-quality/">Read the write-up &rarr;</a> &middot; <a href="https://github.com/jmsmarrelli/contender-shot-quality"><code>contender-shot-quality</code> on GitHub</a></p>
+<p>Shot quality repeats at 0.84 across two 622-shot samples of the same team. Shot
+making repeats at 0.38. A seven-game series is 622 shots. Over a full season,
+though, shot making is the <em>more</em> persistent of the two once you correct for how
+precisely each is measured — which is the opposite of what I expected to find.</p>
+<figure><img loading="lazy" alt="Split-half reliability against sample size" src="figures/contender-shot-quality.png"></figure>
+<hr>
+<h2>Data work</h2>
+<p>Three defects in the public record, each found while building something else and
+each large enough to change a headline:</p>
+<ul>
+<li><strong>The action-type vocabulary was rewritten mid-sample.</strong> "Pull-up jump shot"
+  and "floating jump shot" do not exist in the 2003-04 file; they appear between
+  2007 and 2009 and now cover 28% of attempts, while the plain "layup" they were
+  carved out of collapses from 16.2% to 1.6%. A second, smaller rewrite lands
+  between 2014-15 and 2015-16. A model handed that feature reports the scorer's
+  table as a change in basketball.</li>
+<li><strong>Shot coordinates were recorded differently before 2010-11.</strong> A quarter of all
+  attempts in those seasons sit at exactly zero feet, because most rim attempts
+  were logged at the rim's own coordinate. Afterwards it is 5%.</li>
+<li><strong>Three season files are published on a different coordinate scale entirely.</strong>
+  Detected, inverted, and cross-checked against the files' own distance column,
+  which then agrees to within half a foot in every season.</li>
+</ul>
+<h2>Sources and tools</h2>
+<p>The NBA's public shot chart endpoint, mirrored at
+<a href="https://github.com/DomSamangy/NBA_Shots_04_24">DomSamangy/NBA_Shots_04_24</a>;
+ESPN's play-by-play and box score feeds via
+<a href="https://github.com/sportsdataverse/hoopR-data">hoopR-data</a>; and, for 2025-26,
+NBA play-by-play and shot records from a pinned revision of
+<a href="https://github.com/shufinskiy/nba_data">shufinskiy/nba_data</a>. Python for almost
+everything (pandas, scikit-learn, scipy, matplotlib), R for three of the 2025-26
+studies, and SQL where a query is the clearest way to show the work. No
+proprietary or tracking data is used anywhere.</p>
+<h2>License</h2>
+<p>MIT. See <code>LICENSE</code>.</p>
+</div></main>
+<footer class="foot"><div class="wrap"><span>basketball-analytics</span><span>figures and tables regenerated by the pipeline in this repository</span></div></footer>
+</body>
+</html>
