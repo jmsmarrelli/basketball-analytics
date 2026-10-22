@@ -17,7 +17,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install
-        run: python -m pip install --upgrade pip markdown
+        run: python -m pip install -r requirements.txt
 
       - name: Every referenced figure exists
         run: python tools/site.py --check
